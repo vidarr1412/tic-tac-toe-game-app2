@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Board from './Board';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
 
 const App = () => {
   const [squares, setSquares] = useState(Array(9).fill(null));
@@ -118,45 +121,75 @@ const App = () => {
     : `Next Player: ${currentPlayerName}`;
 
   if (!mode) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-black via-gray-900 to-slate-900 text-cyan-300 font-mono space-y-6">
-        <h1 className="text-4xl font-bold">Choose Game Mode</h1>
-        <button className="bg-cyan-400 text-black px-6 py-2 rounded shadow-md hover:bg-cyan-300" onClick={() => handleModeSelect('pvp')}>⚔️ PVP</button>
-        <button className="bg-cyan-400 text-black px-6 py-2 rounded shadow-md hover:bg-cyan-300" onClick={() => handleModeSelect('ai')}>🤖 AI MODE</button>
+  return (
+    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-black via-gray-900 to-slate-900 text-cyan-300 font-mono">
+      <div className="bg-black/30 border border-cyan-400 rounded-2xl shadow-xl px-10 py-12 text-center space-y-6">
+        <h1 className="text-4xl font-bold text-white">Choose Game Mode</h1>
+
+        <div className="flex flex-col gap-4">
+          <Button
+            variant="default"
+            className="rounded-full px-6 py-3 text-lg shadow-lg bg-cyan-500 hover:bg-cyan-400 text-black"
+            onClick={() => handleModeSelect("pvp")}
+          >
+            ⚔️ PVP
+          </Button>
+
+          <Button
+            variant="default"
+            className="rounded-full px-6 py-3 text-lg shadow-lg bg-cyan-500 hover:bg-cyan-400 text-black"
+            onClick={() => handleModeSelect("ai")}
+          >
+            🤖 AI MODE
+          </Button>
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   if (!gameStarted) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-black via-gray-900 to-slate-900 text-cyan-300 font-mono">
-        <h1 className="text-4xl mb-6">Enter Player{mode === 'pvp' ? 's' : ''} Name{mode === 'pvp' ? 's' : ''}</h1>
-        <form onSubmit={handleStart} className="flex flex-col items-center space-y-4">
-          <input
+  return (
+    <div className="flex flex-col items-center justify-center h-screen bg-gradient-to-br from-black via-gray-900 to-slate-900 text-cyan-300 font-mono">
+      <div className="bg-black/30 border border-cyan-400 rounded-2xl shadow-xl px-10 py-12 text-center space-y-6 w-[320px]">
+        <h1 className="text-3xl font-bold text-white">
+          Enter Player{mode === "pvp" ? "s" : ""} Name{mode === "pvp" ? "s" : ""}
+        </h1>
+
+        <form onSubmit={handleStart} className="flex flex-col gap-4">
+          <Input
             type="text"
             name="X"
-            className="bg-black border border-cyan-300 text-white px-4 py-2 rounded w-72 text-center"
             placeholder="Player Name"
             value={playerNames.X}
             onChange={handleNameChange}
             required
+            className="bg-gray-900 border-cyan-400 text-white placeholder-cyan-300 rounded-lg"
           />
-          {mode === 'pvp' && (
-            <input
+          {mode === "pvp" && (
+            <Input
               type="text"
               name="O"
-              className="bg-black border border-cyan-300 text-white px-4 py-2 rounded w-72 text-center"
               placeholder="Player O Name"
               value={playerNames.O}
               onChange={handleNameChange}
               required
+              className="bg-gray-900 border-cyan-400 text-white placeholder-cyan-300 rounded-lg"
             />
           )}
-          <button className="bg-cyan-400 text-black px-6 py-2 rounded shadow-md hover:bg-cyan-300" type="submit">Start Game</button>
+
+          <Button
+            type="submit"
+            className="rounded-full px-6 py-3 text-lg shadow-lg bg-cyan-500 hover:bg-cyan-400 text-black font-semibold"
+          >
+            Start Game
+          </Button>
         </form>
       </div>
-    );
-  }
+    </div>
+  );
+}
+
 
   return (
     <div className="flex flex-col md:flex-row justify-center items-start gap-12 p-10 bg-gradient-to-br from-black via-gray-900 to-slate-900 min-h-screen text-cyan-300 font-mono">
@@ -166,19 +199,30 @@ const App = () => {
         <Board squares={squares} onClick={handleClick} />
         <div className="flex flex-wrap gap-4 mt-4">
           {(winner || isDraw) && (
-            <button onClick={newGame} className="bg-cyan-400 text-black px-4 py-2 rounded shadow hover:bg-cyan-300">New Game</button>
+            <Button onClick={newGame}>New Game</Button>
           )}
-          <button onClick={resetGame} className="bg-yellow-400 text-black px-4 py-2 rounded shadow hover:bg-yellow-300">Reset Game</button>
-          <button onClick={goToMainMenu} className="bg-red-400 text-black px-4 py-2 rounded shadow hover:bg-red-300">Main Menu</button>
+          <Button variant="outline" onClick={resetGame}>Reset Game</Button>
+    <div className="flex justify-center">
+  <Button
+    variant="destructive"
+    onClick={goToMainMenu}
+    className="px-6 py-3 text-white bg-red-600 hover:bg-red-500 rounded-full shadow-lg transition duration-200 ease-in-out"
+  >
+    🏠 Main Menu
+  </Button>
+</div>
+
         </div>
       </div>
 
-      <div className="bg-black bg-opacity-30 border border-cyan-300 rounded p-6 shadow-lg min-w-[200px]">
-        <h2 className="text-2xl mb-4">⚖️ Scoreboard</h2>
-        <p>⚔️ {playerNames.X}: {score.X}</p>
-        <p>🛡️ {playerNames.O}: {score.O}</p>
-        <p>🏳️ Draws: {score.Draws}</p>
-      </div>
+      <Card className="min-w-[200px] text-white bg-opacity-10 border-cyan-300">
+        <CardContent className="p-6">
+          <h2 className="text-2xl mb-4">⚖️ Scoreboard</h2>
+          <p>⚔️ {playerNames.X}: {score.X}</p>
+          <p>🛡️ {playerNames.O}: {score.O}</p>
+          <p>🏳️ Draws: {score.Draws}</p>
+        </CardContent>
+      </Card>
     </div>
   );
 };
